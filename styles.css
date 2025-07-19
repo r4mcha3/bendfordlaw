@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+#upload-section {
+    margin-bottom: 20px;
+}
+
+#analysis-mode, #file-input {
+    margin: 10px;
+}
+
+#progress-section {
+    margin-bottom: 20px;
+}
+
+#progress-bar-container {
+    width: 100%;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#progress-bar {
+    width: 0%;
+    height: 20px;
+    background-color: #4caf50;
+}
+
+#chart-container {
+    width: 600px;
+    height: 400px;
+    margin: 0 auto;
+}
+
+#results, #analysis, #help {
+    margin-top: 20px;
+    text-align: left;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+#analysis p {
+    font-weight: bold;
+    color: #333;
+}
+
+#analysis .suspicious {
+    color: #d32f2f;
+}
+
+#analysis .normal {
+    color: #388e3c;
+}
+
+#help a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+#help a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8f8f8;
+    text-align: center;
+    padding: 10px 0;
+    border-top: 1px solid #ddd;
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+footer nav {
+    margin-top: 5px;
+}
+
+footer nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 14px;
+}
+
+footer nav a:hover {
+    text-decoration: underline;
+}

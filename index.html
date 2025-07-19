@@ -1,0 +1,94 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benford's Law Analyzer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'></svg>">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Benford's Law Analyzer</h1>
+    <div id="upload-section">
+        <label for="analysis-mode">Analysis Mode:</label>
+        <select id="analysis-mode">
+            <option value="text">Text (OCR from Images)</option>
+            <option value="raw">Raw Image (DCT Coefficients, JPEG only)</option>
+            <option value="pixel">Pixel Values (Experimental)</option>
+        </select>
+        <br>
+        <label for="file-input">Upload a text file (.txt) or image (.png, .jpg):</label>
+        <input type="file" id="file-input" accept=".txt,image/png,image/jpeg,image/jpg">
+    </div>
+    <div id="progress-section">
+        <p>Progress: <span id="progress">0%</span></p>
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+    <div id="analysis"></div>
+    <div id="chart-container">
+        <canvas id="benford-chart" width="600" height="400"></canvas>
+    </div>
+    <div id="results"></div>
+    <div id="help">
+        <h3>Help</h3>
+        <p>Learn how to interpret results and what to do if anomalies are detected in the <a href="https://github.com/r4mcha3/benfordlaw#what-to-do-if-you-suspect-image-manipulation" target="_blank">README</a>.</p>
+    </div>
+    <footer>
+        <p>© 2025 Ramona Chae. All rights reserved.</p>
+        <nav>
+            <a href="#">Resume</a> |
+            <a href="#">CV</a> |
+            <a href="#">Buy Me a Coffee</a> |
+            <a href="#">Want your own?</a>
+        </nav>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/opencv.js@1.2.1/opencv.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.5/dist/jstat.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jpeg-js@0.4.4/lib/decoder.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
